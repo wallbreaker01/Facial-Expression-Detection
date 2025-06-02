@@ -16,11 +16,7 @@ try:
     # Add your actual model filename to the list
     model_files = [
         'emotiondetector.h5',  # Your actual model file
-        'emotion_model.h5',
-        'facial_expression_model.h5', 
-        'model.h5',
-        'emotiondetection.h5',
-        'fer_model.h5'
+
     ]
     
     model_path = None

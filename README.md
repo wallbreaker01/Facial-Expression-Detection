@@ -1,24 +1,27 @@
-# 🎭 Facial Expression Detection
+# 🎭 Facial Expression Detection API
 
-A real-time facial expression recognition system built with deep learning that can detect and classify seven different emotions from live webcam feed.
+A web-based facial expression recognition system built with Flask and deep learning that can detect and classify seven different emotions from uploaded images.
 
 ## ✨ Features
 
-- **Real-time Detection**: Live emotion recognition from webcam feed
+- **REST API**: Flask-based web API for emotion detection
+- **Image Upload**: Analyze emotions from uploaded images
 - **7 Emotion Classes**: Recognizes angry, disgust, fear, happy, neutral, sad, and surprise
 - **Deep Learning Model**: CNN architecture trained on facial expression datasets
 - **OpenCV Integration**: Efficient face detection and image processing
-- **User-friendly Interface**: Simple webcam interface with visual feedback
+- **CORS Support**: Cross-origin requests enabled for frontend integration
+- **Health Check**: API status monitoring endpoint
 
 ## 🚀 Demo
 
-The system detects faces in real-time and overlays the predicted emotion on the video feed with bounding boxes around detected faces.
+The API accepts base64-encoded images and returns emotion predictions with confidence scores and bounding box coordinates for detected faces.
 
 ## 📁 Project Structure
 
 ```
-├── emotiondetector.h5          # Trained model weights
-├── emotiondetector.json        # Model architecture
+├── app.py                      # Flask API server
+├── index.html                  # Frontend web interface
+├── emotiondetector.h5          # Primary trained model weights
 ├── ModelTraining.ipynb         # Training pipeline and model development
 ├── RealTimeDeployment.ipynb    # Real-time inference implementation
 └── images/
@@ -44,99 +47,120 @@ The system detects faces in real-time and overlays the predicted emotion on the 
 
 ### Prerequisites
 
-- Python 3.7+
-- Webcam/Camera access
+- Python 3.11.1
+- Trained emotion detection model (`.h5` file)
 
 ### Dependencies
 
 ```bash
+pip install flask
+pip install flask-cors
 pip install opencv-python
 pip install tensorflow
-pip install keras
 pip install numpy
-pip install pandas
 pip install pillow
+pip install tensorflow
+pip install keras
+pip install pandas
+pip install jupyter
+pip install notebook
 pip install tqdm
+pip install scikit-learn
 ```
 
 ## 🎯 Usage
 
-### Training the Model
+### Starting the API Server
 
-1. Open and run [`ModelTraining.ipynb`](ModelTraining.ipynb) to train the emotion detection model
-2. The notebook will:
-   - Load and preprocess the training data
-   - Build a CNN architecture with multiple convolutional layers
-   - Train the model for emotion classification
-   - Save the trained model as `emotiondetector.h5` and `emotiondetector.json`
+1. Ensure you have a trained model file (e.g., `emotiondetector.h5`) in the project directory
+2. Run the Flask application:
 
-### Real-time Emotion Detection
+```bash
+python app.py
+```
 
-1. Open [`RealTimeDeployment.ipynb`](RealTimeDeployment.ipynb)
-2. Run all cells to start the real-time detection system
-3. The system will:
-   - Load the pre-trained model
-   - Access your webcam
-   - Detect faces in real-time
-   - Classify emotions and display results
-4. Press `q` or `ESC` to quit the application
+3. The API will start on `http://localhost:5000`
+
+### API Endpoints
+
+#### 1. Health Check
+```http
+GET /health
+```
+
+Response:
+```json
+{
+  "status": "running",
+  "model_loaded": true,
+  "model_path": "emotiondetector.h5",
+  "expression_labels": ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]
+}
+```
+
+#### 2. Emotion Prediction
+```http
+POST /predict
+Content-Type: application/json
+```
+
+Request body:
+```json
+{
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA..."
+}
+```
+
+Response (Success):
+```json
+{
+  "success": true,
+  "expression": "Happy",
+  "confidence": 0.892,
+  "all_predictions": [0.01, 0.02, 0.05, 0.89, 0.02, 0.008, 0.002]
+}
+```
+
+Response (Error):
+```json
+{
+  "success": false,
+  "error": "No face detected in the image"
+}
+```
+
+#### 3. Home Page
+```http
+GET /
+```
+
+Returns: "Facial Expression Detection API is running!"
 
 ## 🧠 Model Architecture
 
-The CNN model consists of:
-- **Input Layer**: 48x48 grayscale images
-- **Convolutional Layers**: Multiple Conv2D layers with ReLU activation
-- **Pooling Layers**: MaxPooling2D for dimensionality reduction
-- **Dropout Layers**: Regularization to prevent overfitting
-- **Dense Layers**: Fully connected layers for classification
-- **Output Layer**: 7 neurons with softmax activation for emotion classification
+The CNN model processes:
+- **Input**: 48x48 grayscale face images
+- **Preprocessing**: Face detection, resizing, normalization
+- **Output**: 7-class emotion classification with confidence scores
 
 ## 📊 Emotion Classes
 
-| Index | Emotion   | Description |
-|-------|-----------|-------------|
-| 0     | Angry     | 😠          |
-| 1     | Disgust   | 🤢          |
-| 2     | Fear      | 😨          |
-| 3     | Happy     | 😊          |
-| 4     | Neutral   | 😐          |
-| 5     | Sad       | 😢          |
-| 6     | Surprise  | 😲          |
+| Index | Emotion   | Label     | Description |
+|-------|-----------|-----------|-------------|
+| 0     | Angry     | Angry     | 😠          |
+| 1     | Disgust   | Disgust   | 🤢          |
+| 2     | Fear      | Fear      | 😨          |
+| 3     | Happy     | Happy     | 😊          |
+| 4     | Sad       | Sad       | 😢          |
+| 5     | Surprise  | Surprise  | 😲          |
+| 6     | Neutral   | Neutral   | 😐          |
 
 ## 🔧 Technical Details
 
+- **Framework**: Flask web framework
 - **Face Detection**: Haar Cascade Classifier (`haarcascade_frontalface_default.xml`)
-- **Image Preprocessing**: Grayscale conversion, resizing to 48x48, normalization
+- **Image Processing**: OpenCV for face detection and preprocessing
 - **Model Framework**: TensorFlow/Keras
-- **Real-time Processing**: OpenCV for video capture and display
-
-## 🎮 Controls
-
-- **Q key**: Quit the application
-- **ESC key**: Exit the program
-- **Webcam**: Automatic face detection and emotion recognition
-
-## 📈 Performance
-
-The model is trained to recognize facial expressions with high accuracy across different lighting conditions and face orientations. The real-time system processes video frames efficiently for smooth user experience.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🙏 Acknowledgments
-
-- OpenCV community for computer vision tools
-- TensorFlow/Keras teams for deep learning framework
-- Contributors to facial expression datasets
-
----
-
-**Made with ❤️ for emotion recognition research and applications**
+- **Input Format**: Base64-encoded images
+- **Image Preprocessing**: Grayscale conversion, resizing to 48x48, normalization
+- **CORS**: Enabled for cross-origin requests
