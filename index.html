@@ -222,7 +222,7 @@
             // Convert canvas to base64 for sending to Python backend
             const imageData = canvas.toDataURL('image/jpeg', 0.8);
             
-            // Send to your Flask backend
+            // Send to Flask backend
             sendToModel(imageData);
         }
 

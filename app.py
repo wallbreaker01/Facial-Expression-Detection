@@ -13,9 +13,9 @@ CORS(app)  # Enable CORS for frontend requests
 
 # Load your trained model
 try:
-    # Add your actual model filename to the list
+
     model_files = [
-        'emotiondetector.h5',  # Your actual model file
+        'emotiondetector.h5',
 
     ]
     
@@ -43,7 +43,7 @@ except Exception as e:
     traceback.print_exc()
     model = None
 
-# Expression labels - make sure these match your model's training order
+
 expression_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 @app.route('/')
