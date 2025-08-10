@@ -1,4 +1,4 @@
-# 🎭 Facial Expression Detection API
+# 🎭 Facial Expression Detection 
 
 A web-based facial expression recognition system built with Flask and deep learning that can detect and classify seven different emotions from uploaded images.
 
